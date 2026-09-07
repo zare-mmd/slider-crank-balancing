@@ -11,6 +11,8 @@ Computes the primary and secondary shaking forces of the mechanism using a lumpe
 Searches across a range of counterweight balancing factors to find the value that minimizes the force-ellipse area (i.e., reduces overall shaking force)
 Plots the original vs. balanced force loci for comparison
 
+![Force Plot](force-plot.png.jpg)
+
 # Tools:
 
 Python, NumPy, SymPy, Matplotlib
