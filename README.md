@@ -1,20 +1,38 @@
-# slider-crank-balancing
-Dynamic balancing optimization of a slider-crank mechanism using Python (optional bonus coursework).
+# Slider-Crank Dynamic Balancing
 
-Python script that analyzes and minimizes the shaking forces of a slider-crank mechanism, developed as an optional bonus assignment in the Dynamics of Machinery course — attempted by only a small number of students in the class.
+Dynamic balancing optimization of a slider-crank mechanism in Python. This was an optional bonus assignment in the Dynamics of Machinery course at Shiraz University, attempted by only a few students.
 
-# What it does:
+![Shaking force before and after balancing](balancing_result.png)
 
-Computes the primary and secondary shaking forces of the mechanism using a lumped-mass model of the crank and connecting rod
-Searches across a range of counterweight balancing factors to find the value that minimizes the force-ellipse area (i.e., reduces overall shaking force)
-Plots the original vs. balanced force loci for comparison
+## The problem
 
-![Force Plot](force-plot.png.jpg)
+A slider-crank (like a single-cylinder engine) shakes its frame because its moving parts keep accelerating. A counterweight on the crank can cancel the rotating part of this force completely, but not the back-and-forth part of the piston. It can only shift that part between the horizontal and vertical directions. The question: **what fraction x of the reciprocating mass should the counterweight balance?**
 
-# Tools:
+## How it works
+
+- **Lumped masses:** the crank and connecting rod are replaced by a rotating mass at the crank pin and a reciprocating mass at the piston. SymPy solves the mass split so that the rod's total mass and center of mass are preserved.
+- **Shaking force:** computed over one crank revolution as the rotating part plus the primary (cos θ) and secondary ((r/l)·cos 2θ) reciprocating parts. It is stored as a complex number: real part = horizontal, imaginary part = vertical.
+- **Counterweight:** balances all of the rotating mass and a fraction x of the reciprocating mass.
+- **Optimization:** searches x from 0 to 1 and picks the value with the smallest mean shaking force (trapezoidal integration over one revolution).
+
+## Result
+
+| | Unbalanced | Balanced (x = 0.50) |
+|---|---|---|
+| Mean shaking force | 22,528 N | 7,858 N (**−65%**) |
+| Peak shaking force | 33,632 N | 11,888 N |
+
+The optimum x = 0.50 matches the classic engineering rule of thumb of balancing one half to two thirds of the reciprocating mass.
+
+## How to run
+
+    pip install numpy sympy matplotlib
+    python slider_crank_balancing.py
+
+## Tools
 
 Python, NumPy, SymPy, Matplotlib
 
-# Background:
+## Update (Nov 2026)
 
-This was an optional bonus assignment in the Dynamics of Machinery course, taken on by only a handful of students.
+Revisited this coursework and corrected it: the balancing model now uses a counterweight instead of scaling the reciprocating forces, the candidate selection now picks the best x instead of the worst, and the x search uses a finer grid (0.01 steps).
